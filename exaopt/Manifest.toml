@@ -198,7 +198,9 @@ version = "0.8.3"
 
 [[ExaOpt]]
 deps = ["ExaPF", "ExaTron", "LinearAlgebra", "MathOptInterface", "Printf", "TimerOutputs", "UnicodePlots"]
-path = "/ccs/proj/csc359/michel/julia_depot/dev/ExaOpt"
+git-tree-sha1 = "8da31c837319bb0708137b9acca159d7cb979fb1"
+repo-rev = "master"
+repo-url = "git@github.com:exanauts/ExaPF-Opt.git"
 uuid = "ef244971-cf80-42b0-9762-2c2c832df5d5"
 version = "0.1.0"
 
