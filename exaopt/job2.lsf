@@ -1,0 +1,15 @@
+#!/bin/bash
+# Begin LSF Directives
+#BSUB -P CSC359
+#BSUB -W 0:15
+#BSUB -nnodes 2
+#BSUB -J proxal-tests
+ 
+cd $PROJWORK/csc359/michel/DOPT.jl/exaopt
+date
+module load gcc/7.4.0
+module load cuda
+export MADNLP_BLAS=openblas
+export JULIA_CUDA_VERBOSE=1
+export JULIA_DEPOT_PATH=$PROJWORK/csc359/michel/julia_depot
+jsrun -n 2 -r 2 -c 1 -a 1 -g 1 julia --color=no --project ./distributed.jl
