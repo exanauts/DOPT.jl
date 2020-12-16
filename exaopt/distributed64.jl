@@ -1,8 +1,9 @@
+using Test
 using ProxAL
 using DelimitedFiles, Printf
 using LinearAlgebra, JuMP, Ipopt
+using ExaOpt
 using CatViews
-using CUDA
 using MPI
 
 MPI.Init()
@@ -14,6 +15,7 @@ ramp_scale = 0.04
 load_scale = 1.0
 maxρ = 0.1
 quad_penalty = 0.1
+rtol = 1e-4
 
 # Load case
 case_file = joinpath(DATA_DIR, "$(case).m")
@@ -38,11 +40,23 @@ modelinfo.num_ctgs = K
 # Algorithm settings
 algparams = AlgParams()
 algparams.parallel = true #algparams.parallel = (nprocs() > 1)
-algparams.verbose = 0
+algparams.verbose = 1
 algparams.decompCtgs = false
-algparams.optimizer =
-optimizer_with_attributes(Ipopt.Optimizer, "print_level" => 0)
+algparams.device = ProxAL.CUDADevice
+algparams.iterlim = 1
+# algparams.optimizer =
+# optimizer_with_attributes(Ipopt.Optimizer, "print_level" => Int64(algparams.verbose > 0)*5)
 
+algparams.optimizer = optimizer_with_attributes(
+        Ipopt.Optimizer,
+        "print_level" => 0,
+        "limited_memory_max_history" => 50,
+        "hessian_approximation" => "limited-memory",
+        "derivative_test" => "first-order",
+        "tol" => 1e-6,
+)
+algparams.gpu_optimizer = ExaOpt.AugLagSolver(; max_iter=20, ωtol=1e-4, verbose=1)
+@testset "Test ProxAL on $(case) with $T-period, $K-ctgs, time_link=penalty and Ipopt" begin
 
 # rawdata.ctgs_arr = deepcopy(ctgs_arr[1:modelinfo.num_ctgs])
 opfdata = opf_loaddata(rawdata;
@@ -58,6 +72,4 @@ set_rho!(algparams;
 
 algparams.mode = :coldstart
 runinfo = run_proxALM(opfdata, rawdata, modelinfo, algparams)
-
-
 MPI.Finalize()
