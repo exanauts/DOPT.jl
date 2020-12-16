@@ -43,7 +43,7 @@ algparams.parallel = true #algparams.parallel = (nprocs() > 1)
 algparams.verbose = 1
 algparams.decompCtgs = false
 algparams.device = ProxAL.CUDADevice
-algparams.iterlim = 1
+algparams.iterlim = 20
 # algparams.optimizer =
 # optimizer_with_attributes(Ipopt.Optimizer, "print_level" => Int64(algparams.verbose > 0)*5)
 
