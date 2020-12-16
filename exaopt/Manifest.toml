@@ -564,7 +564,7 @@ uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 
 [[ProxAL]]
 deps = ["CUDA", "CatViews", "DelimitedFiles", "ExaPF", "Ipopt", "JuMP", "LinearAlgebra", "MPI", "MadNLP", "Printf", "SparseArrays"]
-git-tree-sha1 = "14553cca8e98a804cc69d533b7c608c3db41c948"
+git-tree-sha1 = "4fae7a327c530cae2f5a4f98360f0cecebcafb73"
 repo-rev = "summit"
 repo-url = "git@github.com:exanauts/ProxAL.jl.git"
 uuid = "12c3852d-bf95-4e7b-be60-68937c3c927b"

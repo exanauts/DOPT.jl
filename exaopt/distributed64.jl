@@ -56,7 +56,6 @@ algparams.optimizer = optimizer_with_attributes(
         "tol" => 1e-6,
 )
 algparams.gpu_optimizer = ExaOpt.AugLagSolver(; max_iter=20, ωtol=1e-4, verbose=1)
-@testset "Test ProxAL on $(case) with $T-period, $K-ctgs, time_link=penalty and Ipopt" begin
 
 # rawdata.ctgs_arr = deepcopy(ctgs_arr[1:modelinfo.num_ctgs])
 opfdata = opf_loaddata(rawdata;
