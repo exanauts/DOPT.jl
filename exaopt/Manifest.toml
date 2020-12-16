@@ -198,16 +198,14 @@ version = "0.8.3"
 
 [[ExaOpt]]
 deps = ["ExaPF", "ExaTron", "LinearAlgebra", "MathOptInterface", "Printf", "TimerOutputs", "UnicodePlots"]
-git-tree-sha1 = "8da31c837319bb0708137b9acca159d7cb979fb1"
-repo-rev = "master"
-repo-url = "git@github.com:exanauts/ExaPF-Opt.git"
+path = "/ccs/proj/csc359/michel/julia_depot/dev/ExaOpt"
 uuid = "ef244971-cf80-42b0-9762-2c2c832df5d5"
 version = "0.1.0"
 
 [[ExaPF]]
 deps = ["CUDA", "FiniteDiff", "ForwardDiff", "IterativeSolvers", "KernelAbstractions", "Krylov", "LightGraphs", "LinearAlgebra", "MathOptInterface", "Metis", "Printf", "SparseArrays", "SparseDiffTools", "TimerOutputs"]
-git-tree-sha1 = "9f52210d2d664d5e4abb37ac7a94c651642ce2fd"
-repo-rev = "develop"
+git-tree-sha1 = "cd8df7e308c5db9cba46c931808b19a4f6c7a177"
+repo-rev = "fp/proxal"
 repo-url = "git@github.com:exanauts/ExaPF.jl.git"
 uuid = "0cf0e50c-a82e-488f-ac7e-41ffdff1b8aa"
 version = "0.4.0"
