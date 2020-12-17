@@ -198,7 +198,7 @@ version = "0.8.3"
 
 [[ExaOpt]]
 deps = ["ExaPF", "ExaTron", "LinearAlgebra", "MathOptInterface", "Printf", "TimerOutputs", "UnicodePlots"]
-git-tree-sha1 = "8da31c837319bb0708137b9acca159d7cb979fb1"
+git-tree-sha1 = "421597900afb175d6cbb04e2fb1bba64d5bc6331"
 repo-rev = "master"
 repo-url = "git@github.com:exanauts/ExaPF-Opt.git"
 uuid = "ef244971-cf80-42b0-9762-2c2c832df5d5"
@@ -206,8 +206,8 @@ version = "0.1.0"
 
 [[ExaPF]]
 deps = ["CUDA", "FiniteDiff", "ForwardDiff", "IterativeSolvers", "KernelAbstractions", "Krylov", "LightGraphs", "LinearAlgebra", "MathOptInterface", "Metis", "Printf", "SparseArrays", "SparseDiffTools", "TimerOutputs"]
-git-tree-sha1 = "cd8df7e308c5db9cba46c931808b19a4f6c7a177"
-repo-rev = "fp/proxal"
+git-tree-sha1 = "5e1c66b35bad6dbc992672e3c997fce74466be70"
+repo-rev = "develop"
 repo-url = "git@github.com:exanauts/ExaPF.jl.git"
 uuid = "0cf0e50c-a82e-488f-ac7e-41ffdff1b8aa"
 version = "0.4.0"
@@ -564,7 +564,7 @@ uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 
 [[ProxAL]]
 deps = ["CUDA", "CatViews", "DelimitedFiles", "ExaPF", "Ipopt", "JuMP", "LinearAlgebra", "MPI", "MadNLP", "Printf", "SparseArrays"]
-git-tree-sha1 = "4fae7a327c530cae2f5a4f98360f0cecebcafb73"
+git-tree-sha1 = "62393ec5be39ee6ba87cc001aaba830ef3f64b53"
 repo-rev = "summit"
 repo-url = "git@github.com:exanauts/ProxAL.jl.git"
 uuid = "12c3852d-bf95-4e7b-be60-68937c3c927b"

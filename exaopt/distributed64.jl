@@ -44,6 +44,8 @@ algparams.verbose = 1
 algparams.decompCtgs = false
 algparams.device = ProxAL.CUDADevice
 algparams.iterlim = 20
+# Tolerance of the Newton-Raphson algorithm
+algparams.nr_tol = 1e-10
 # algparams.optimizer =
 # optimizer_with_attributes(Ipopt.Optimizer, "print_level" => Int64(algparams.verbose > 0)*5)
 
@@ -55,7 +57,7 @@ algparams.optimizer = optimizer_with_attributes(
         "derivative_test" => "first-order",
         "tol" => 1e-6,
 )
-algparams.gpu_optimizer = ExaOpt.AugLagSolver(; max_iter=20, ωtol=1e-4, verbose=1)
+algparams.gpu_optimizer = ExaOpt.AugLagSolver(; max_iter=20, ωtol=1e-4, verbose=1, inner_algo=:projectedgradient)
 
 # rawdata.ctgs_arr = deepcopy(ctgs_arr[1:modelinfo.num_ctgs])
 opfdata = opf_loaddata(rawdata;
