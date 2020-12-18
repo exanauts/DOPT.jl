@@ -8,7 +8,7 @@ using MPI
 
 MPI.Init()
 DATA_DIR = joinpath(dirname(@__FILE__), "..", "data")
-case = "case1354pegase"
+case = "case9"
 T = 24
 K = 0
 ramp_scale = 0.30
@@ -62,17 +62,17 @@ algparams.device = ProxAL.CPU
 algparams.iterlim = 100
 # Tolerance of the Newton-Raphson algorithm
 algparams.nr_tol = 1e-10
-# algparams.optimizer =
-# optimizer_with_attributes(Ipopt.Optimizer, "print_level" => Int64(algparams.verbose > 0)*5)
+algparams.optimizer =
+optimizer_with_attributes(Ipopt.Optimizer, "print_level" => Int64(algparams.verbose > 0)*5)
 
-algparams.optimizer = optimizer_with_attributes(
-        Ipopt.Optimizer,
-        "print_level" => 0,
-        "limited_memory_max_history" => 50,
-        "hessian_approximation" => "limited-memory",
-        "derivative_test" => "first-order",
-        "tol" => 1e-6,
-)
+# algparams.optimizer = optimizer_with_attributes(
+#         Ipopt.Optimizer,
+#         "print_level" => 0,
+#         "limited_memory_max_history" => 50,
+#         "hessian_approximation" => "limited-memory",
+#         "derivative_test" => "first-order",
+#         "tol" => 1e-6,
+# )
 algparams.gpu_optimizer = ExaOpt.AugLagSolver(; max_iter=20, ωtol=1e-4, verbose=1, α0=1e-12, inner_algo=:projectedgradient)
 
 # rawdata.ctgs_arr = deepcopy(ctgs_arr[1:modelinfo.num_ctgs])
@@ -89,13 +89,13 @@ set_rho!(algparams;
 
 algparams.mode = :coldstart
 runinfo = run_proxALM(opfdata, rawdata, modelinfo, algparams, ProxAL.ReducedSpace(); init_opf = true)
-MPI.Finalize()
 
 #----- plotting -----#
 using Plots
 using LaTeXStrings
-ENV["GKSwstype"]="nul"
-if algparams.verbose > 1
+
+if algparams.verbose > 1 && MPI.Comm_rank(MPI.COMM_WORLD) == 0
+        ENV["GKSwstype"]="nul"
         algparams.optimizer = optimizer_with_attributes(Ipopt.Optimizer, "print_level" => 5)
         algparams.mode = :nondecomposed
         result = solve_fullmodel(opfdata, rawdata, modelinfo, algparams)
@@ -119,17 +119,18 @@ if algparams.verbose > 1
                         guidefontsize = fsz,
                         titlefontsize = fsz,
                         legendfontsize = fsz,
-                        size = (800, 800)
+                        size = (800, 800),
+                        legend = :bottomleft
                 )
         end
 
         function initialize_plot()
                 gr()
-                label= [L"|\textrm{\sffamily Ramp-error}|"
-                        L"|\textrm{\sffamily KKT-error}|"
-                        L"|x-x^*|"
-                        L"|c(x)-c(x^*)|/c(x^*)"
-                        L"|L-L^*|/L^*"]
+                label= ["|Ramp-error|"
+                        "|KKT-error|"
+                        "|x-x^*|"
+                        "|c(x)-c(x^*)|/c(x^*)"
+                        "|L-L^*|/L^*"]
                 any = Array{Any, 1}(undef, length(label))
                 any .= Any[[1,1]]
                 plt = plot([Inf, Inf], any,
@@ -137,7 +138,7 @@ if algparams.verbose > 1
                                 lw = 2.5,
                                 # markersize = 2.5,
                                 # markershape = :auto,
-                                xlabel=L"\textrm{\sffamily Iteration}")
+                                xlabel="Iteration")
                 options_plot(plt)
                 return plt
         end
@@ -152,5 +153,7 @@ if algparams.verbose > 1
                 push!(plt, 4, iter, optimgap)
                 push!(plt, 5, iter, (lyapunov_gap < 0) ? NaN : lyapunov_gap)
         end
-        savefig(plt, case * ".plot.png")
+        np = MPI.Comm_size(MPI.COMM_WORLD)
+        savefig(plt, case * ".plot_$(case)_$(np).png")
 end
+MPI.Finalize()
