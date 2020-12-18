@@ -11,10 +11,10 @@ DATA_DIR = joinpath(dirname(@__FILE__), "..", "data")
 case = "case118"
 T = 10
 K = 0
-ramp_scale = 0.30
+ramp_scale = 0.20
 load_scale = 1.0
-maxρ = 0.001
-quad_penalty = 10
+maxρ = 1.0
+quad_penalty = 1e5
 rtol = 1e-4
 
 
