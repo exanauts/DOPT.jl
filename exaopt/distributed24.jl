@@ -12,11 +12,26 @@ case = "case1354pegase"
 T = 24
 K = 0
 ramp_scale = 0.30
-load_scale = 0.1
+load_scale = 0.85
 maxρ = 0.001
 quad_penalty = 1000
 rtol = 1e-4
 
+if case == "case9"
+        T = 2
+        ramp_scale = 0.5
+        load_scale = 1.0
+        maxρ = 0.1
+        quad_penalty = 0.1
+end
+
+if case == "case118"
+        T = 24
+        ramp_scale = 0.20
+        load_scale = 1.0
+        maxρ = 1.0
+        quad_penalty = 1e5
+end
 
 # Load case
 case_file = joinpath(DATA_DIR, "$(case).m")
@@ -41,7 +56,7 @@ modelinfo.num_ctgs = K
 # Algorithm settings
 algparams = AlgParams()
 algparams.parallel = true #algparams.parallel = (nprocs() > 1)
-algparams.verbose = 1
+algparams.verbose = 2
 algparams.decompCtgs = false
 algparams.device = ProxAL.CPU
 algparams.iterlim = 100
@@ -75,3 +90,67 @@ set_rho!(algparams;
 algparams.mode = :coldstart
 runinfo = run_proxALM(opfdata, rawdata, modelinfo, algparams, ProxAL.ReducedSpace(); init_opf = true)
 MPI.Finalize()
+
+#----- plotting -----#
+using Plots
+using LaTeXStrings
+ENV["GKSwstype"]="nul"
+if algparams.verbose > 1
+        algparams.optimizer = optimizer_with_attributes(Ipopt.Optimizer, "print_level" => 5)
+        algparams.mode = :nondecomposed
+        result = solve_fullmodel(opfdata, rawdata, modelinfo, algparams)
+        xstar = result["primal"]
+        zstar = result["objective_value_nondecomposed"]
+
+        algparams.mode = :lyapunov_bound
+        result = solve_fullmodel(opfdata, rawdata, modelinfo, algparams)
+        lyapunov_star = result["objective_value_lyapunov_bound"]
+
+
+        function options_plot(plt)
+                fsz = 20
+                plot!(plt,
+                        fontfamily = "Computer-Modern",
+                        yscale = :log10,
+                        framestyle = :box,
+                        ylim = [1e-4, 1e+1],
+                        xtickfontsize = fsz,
+                        ytickfontsize = fsz,
+                        guidefontsize = fsz,
+                        titlefontsize = fsz,
+                        legendfontsize = fsz,
+                        size = (800, 800)
+                )
+        end
+
+        function initialize_plot()
+                gr()
+                label= [L"|\textrm{\sffamily Ramp-error}|"
+                        L"|\textrm{\sffamily KKT-error}|"
+                        L"|x-x^*|"
+                        L"|c(x)-c(x^*)|/c(x^*)"
+                        L"|L-L^*|/L^*"]
+                any = Array{Any, 1}(undef, length(label))
+                any .= Any[[1,1]]
+                plt = plot([Inf, Inf], any,
+                                lab = reshape(label, 1, length(label)),
+                                lw = 2.5,
+                                # markersize = 2.5,
+                                # markershape = :auto,
+                                xlabel=L"\textrm{\sffamily Iteration}")
+                options_plot(plt)
+                return plt
+        end
+
+        plt = initialize_plot()
+        for iter=1:runinfo.iter
+                optimgap = 100.0abs(runinfo.objvalue[iter] - zstar)/abs(zstar)
+                lyapunov_gap = 100.0(runinfo.lyapunov[iter] - lyapunov_star)/abs(lyapunov_star)
+                push!(plt, 1, iter, runinfo.maxviol_t[iter])
+                push!(plt, 2, iter, runinfo.maxviol_d[iter])
+                push!(plt, 3, iter, runinfo.dist_x[iter])
+                push!(plt, 4, iter, optimgap)
+                push!(plt, 5, iter, (lyapunov_gap < 0) ? NaN : lyapunov_gap)
+        end
+        savefig(plt, case * ".plot.png")
+end
