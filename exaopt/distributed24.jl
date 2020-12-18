@@ -73,5 +73,5 @@ set_rho!(algparams;
          maxρ_c = maxρ)
 
 algparams.mode = :coldstart
-runinfo = run_proxALM(opfdata, rawdata, modelinfo, algparams; init_opf = true)
+runinfo = run_proxALM(opfdata, rawdata, modelinfo, algparams, ProxAL.ReducedSpace(); init_opf = true)
 MPI.Finalize()
