@@ -214,7 +214,7 @@ version = "0.4.0"
 
 [[ExaTron]]
 deps = ["CUDA", "Libdl", "LinearAlgebra"]
-git-tree-sha1 = "4810b54beb8929eb0f8cf925fe4cb5dc21a82432"
+git-tree-sha1 = "ef484c23b1be3369570b872c946b6bcbbac4f911"
 repo-rev = "main"
 repo-url = "git@github.com:exanauts/ExaTron.git"
 uuid = "28b18bf8-76f9-41ea-81fa-0f922810b349"
@@ -563,8 +563,8 @@ deps = ["Unicode"]
 uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 
 [[ProxAL]]
-deps = ["CUDA", "CatViews", "DelimitedFiles", "ExaPF", "Ipopt", "JuMP", "LinearAlgebra", "MPI", "MadNLP", "Printf", "SparseArrays"]
-git-tree-sha1 = "62393ec5be39ee6ba87cc001aaba830ef3f64b53"
+deps = ["CUDA", "CatViews", "DelimitedFiles", "ExaOpt", "ExaPF", "ExaTron", "Ipopt", "JuMP", "LinearAlgebra", "MPI", "MadNLP", "Printf", "SparseArrays"]
+git-tree-sha1 = "41d90c22250c3bdb1cb8337b825a8dcb51f50952"
 repo-rev = "summit"
 repo-url = "git@github.com:exanauts/ProxAL.jl.git"
 uuid = "12c3852d-bf95-4e7b-be60-68937c3c927b"

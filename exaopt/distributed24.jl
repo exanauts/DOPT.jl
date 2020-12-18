@@ -58,7 +58,7 @@ algparams.optimizer = optimizer_with_attributes(
         "derivative_test" => "first-order",
         "tol" => 1e-6,
 )
-algparams.gpu_optimizer = ExaOpt.AugLagSolver(; max_iter=20, ωtol=1e-4, verbose=1, α0=0.00001, inner_algo=:tron)
+algparams.gpu_optimizer = ExaOpt.AugLagSolver(; max_iter=20, ωtol=1e-4, verbose=1, α0=1e-12, inner_algo=:projectedgradient)
 
 # rawdata.ctgs_arr = deepcopy(ctgs_arr[1:modelinfo.num_ctgs])
 opfdata = opf_loaddata(rawdata;
@@ -73,5 +73,5 @@ set_rho!(algparams;
          maxρ_c = maxρ)
 
 algparams.mode = :coldstart
-runinfo = run_proxALM(opfdata, rawdata, modelinfo, algparams)
+runinfo = run_proxALM(opfdata, rawdata, modelinfo, algparams; init_opf = true)
 MPI.Finalize()
